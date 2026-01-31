@@ -11,7 +11,7 @@
                     <table class="table table-sm table-borderless">
                         <thead>
                             <tr>
-                                <th>Item</th>
+                                <th>Group</th>
                                 <th class="text-end">Quantity</th>
                                 <th class="text-end">Total</th>
                             </tr>
@@ -37,19 +37,6 @@
                                 </td>
                             </tr>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="2" class="text-end">Total Adjustments:</th>
-                                <th class="text-end">
-                                    <t t-if="currency['position']">
-                                        <span t-out="excluded_total" t-options="{'widget': 'float', 'precision': currency['precision']}"/><span t-out="currency['symbol']"/>
-                                    </t>
-                                    <t t-else="">
-                                        <span t-out="currency['symbol']"/><span t-out="excluded_total" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
-                                    </t>
-                                </th>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
                 <div class="oe_structure"></div>
