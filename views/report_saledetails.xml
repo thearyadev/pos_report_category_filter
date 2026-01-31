@@ -43,5 +43,71 @@
             </t>
         </xpath>
 
+        <!-- Add Hourly Sales Breakdown section after the Total -->
+        <xpath expr="//div[@id='discounts']" position="before">
+            <t t-if="hourly_sales">
+                <div class="oe_structure"></div>
+                <div id="hourly_sales" style="page-break-inside: avoid;">
+                    <h6 class="bg-secondary p-1 fw-bold">Hourly Sales Breakdown</h6>
+                    <table class="table table-sm table-borderless">
+                        <thead>
+                            <tr>
+                                <th>Hour</th>
+                                <th class="text-end">Orders</th>
+                                <th class="text-end">Items</th>
+                                <th class="text-end">Total (Excl. Tax)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="hourly_sales" t-as="hour_data" class="border-bottom border-secondary">
+                                <td class="ps-2 fw-bold">
+                                    <span t-out="hour_data['hour']"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-out="hour_data['orders']"/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-out="hour_data['items']"/>
+                                </td>
+                                <td class="text-end">
+                                    <t t-if="currency['position']">
+                                        <span t-out="hour_data['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><span t-out="currency['symbol']"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span t-out="currency['symbol']"/><span t-out="hour_data['total']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="oe_structure"></div>
+            </t>
+        </xpath>
+
+        <!-- Hide the Total in Session Control section -->
+        <xpath expr="//t[@id='closing_session']/div[@style='break-inside: avoid;']/strong[contains(text(), 'Total:')]" position="replace"/>
+
+        <!-- Hide the Payments section -->
+        <xpath expr="//div[@id='payments']" position="replace">
+            <div id="payments" style="page-break-inside: avoid;">
+                <!-- Add Total (pre-tax + tax) after taxes section -->
+                <table class="table table-sm table-borderless w-50 ms-auto border-top">
+                    <tr class="fs-5">
+                        <th class="ps-2 fw-bolder">Total</th>
+                        <th class="text-end fw-bolder">
+                            <t t-if="currency['position']">
+                                <span t-out="taxes_info['base_amount'] + taxes_info['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><span t-out="currency['symbol']"/>
+                            </t>
+                            <t t-else="">
+                                <span t-out="currency['symbol']"/><span t-out="taxes_info['base_amount'] + taxes_info['tax_amount']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
+                            </t>
+                        </th>
+                    </tr>
+                </table>
+                <div class="oe_structure"></div>
+            </div>
+        </xpath>
+
     </template>
 </odoo>
