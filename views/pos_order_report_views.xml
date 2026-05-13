@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_report_pos_order_pivot_non_revenue" model="ir.ui.view">
+        <field name="name">report.pos.order.pivot.non.revenue</field>
+        <field name="model">report.pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_report_pos_order_pivot"/>
+        <field name="arch" type="xml">
+            <field name="price_total" position="after">
+                <field name="revenue_price_total" type="measure"/>
+                <field name="non_revenue_price_total" type="measure"/>
+                <field name="revenue_price_subtotal_excl" type="measure"/>
+                <field name="non_revenue_price_subtotal_excl" type="measure"/>
+            </field>
+            <field name="product_qty" position="after">
+                <field name="revenue_product_qty" type="measure"/>
+                <field name="non_revenue_product_qty" type="measure"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_report_pos_order_graph_non_revenue" model="ir.ui.view">
+        <field name="name">report.pos.order.graph.non.revenue</field>
+        <field name="model">report.pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_report_pos_order_graph"/>
+        <field name="arch" type="xml">
+            <field name="price_total" position="after">
+                <field name="revenue_price_total" type="measure"/>
+                <field name="non_revenue_price_total" type="measure"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="report_pos_order_view_tree_non_revenue" model="ir.ui.view">
+        <field name="name">report.pos.order.view.list.non.revenue</field>
+        <field name="model">report.pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.report_pos_order_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="price_total" position="after">
+                <field name="is_non_revenue" optional="show"/>
+                <field name="revenue_price_total" optional="show"/>
+                <field name="non_revenue_price_total" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_report_pos_order_search_non_revenue" model="ir.ui.view">
+        <field name="name">report.pos.order.search.non.revenue</field>
+        <field name="model">report.pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_report_pos_order_search"/>
+        <field name="arch" type="xml">
+            <filter name="not_cancelled" position="after">
+                <separator/>
+                <filter string="Revenue Lines" name="revenue_lines" domain="[('is_non_revenue', '=', False)]"/>
+                <filter string="Non-Revenue Lines" name="non_revenue_lines" domain="[('is_non_revenue', '=', True)]"/>
+            </filter>
+            <field name="product_categ_id" position="after">
+                <field name="is_non_revenue"/>
+            </field>
+            <filter name="pos_categ_id" position="after">
+                <filter string="Revenue Treatment" name="group_is_non_revenue" context="{'group_by':'is_non_revenue'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="point_of_sale.action_report_pos_order_all" model="ir.actions.act_window">
+        <field name="context">{'group_by': [], 'search_default_not_cancelled': 1, 'search_default_revenue_lines': 1}</field>
+    </record>
+
+    <record id="point_of_sale.action_report_pos_order_all_filtered" model="ir.actions.act_window">
+        <field name="context">{
+            'search_default_config_id': [active_id],
+            'default_config_id': active_id,
+            'search_default_revenue_lines': 1}
+        </field>
+    </record>
+
+    <record id="action_report_pos_order_all_native" model="ir.actions.act_window">
+        <field name="name">Orders Analysis (Native Totals)</field>
+        <field name="res_model">report.pos.order</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="search_view_id" ref="point_of_sale.view_report_pos_order_search"/>
+        <field name="context">{'group_by': [], 'search_default_not_cancelled': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No data yet!</p>
+            <p>Create a new POS order</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_report_pos_order_all_native"
+              name="Orders (Native Totals)"
+              action="action_report_pos_order_all_native"
+              parent="point_of_sale.menu_point_rep"
+              sequence="5"/>
+</odoo>

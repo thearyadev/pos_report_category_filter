@@ -5,8 +5,9 @@ class PosCategory(models.Model):
     _inherit = 'pos.category'
 
     exclude_from_report_turnover = fields.Boolean(
-        string="Exclude from POS Sales Report",
+        string="Non-Revenue / Clearing Activity",
         default=False,
-        help="If checked, items in this POS category will be separated from net sales "
-             "in the POS Z-Report and shown in a separate 'Payouts & Adjustments' section."
+        help="If checked, POS lines in this category are treated as cash movement or clearing activity "
+             "instead of merchandise revenue in POS reports. Use this for lottery payouts, container "
+             "deposits, and similar non-revenue items."
     )
